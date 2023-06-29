@@ -1,0 +1,125 @@
+version: '3.8'
+
+x-common-config: &common-config
+  APPLICATION_ENV__LOCAL: 'local'
+
+x-app-config: &app-config
+  FLASK_APP: "app.py"
+  FLASK_RUN_HOST: "0.0.0.0"
+  FLASK_RUN_PORT: 8080
+
+x-db-config: &db-config
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: postgres
+  POSTGRES_PORT: 5432
+  POSTGRES_DB: tg_db
+
+services:
+  broker__bot:
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - "6379:6379"
+    command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+    volumes:
+      - cache:/data
+
+  db__bot:
+    image: postgres:14-alpine
+    restart: always
+    networks:
+      - postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - data:/var/lib/postgresql/data
+    environment:
+      <<: *db-config
+
+  manager_db__bot:
+    build:
+      context: "."
+      dockerfile: "src/bot__db/Dockerfile"
+    container_name: manager_db__bot
+    command: "python /docker_app/src/bot__db/main.py"
+    networks:
+      - postgres
+    restart: 'no'
+    environment:
+      <<: *common-config
+      <<: *app-config
+      <<: *db-config
+      SQLALCHEMY_DATABASE_URI: "postgresql://postgres:postgres@db__bot:5432/tg_db"
+    volumes:
+      - ./src:/docker_app/src
+      - ./srv:/docker_app/srv
+    depends_on:
+      - db__bot
+
+  admin_web__bot:
+    restart: always
+    build:
+      context: "."
+      dockerfile: "src/bot__admin_web/Dockerfile"
+    command: "python /docker_app/src/bot__admin_web/app.py"
+    networks:
+      - postgres
+    environment:
+      <<: *common-config
+      <<: *app-config
+      SQLALCHEMY_DATABASE_URI: "postgresql://postgres:postgres@db__bot:5432/tg_db"
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./src:/docker_app/src
+      - ./srv:/docker_app/srv
+    depends_on:
+      - db__bot
+      - broker__bot
+
+  app__bot:
+    restart: always
+    build:
+      context: "."
+      dockerfile: "src/bot__app/Dockerfile"
+    command: "python /docker_app/src/bot__app/main.py"
+    networks:
+      - postgres
+    environment:
+      SQLALCHEMY_DATABASE_URI: "postgresql://postgres:postgres@db__bot:5432/tg_db"
+      TG_TOKEN: "1522218884:AAEqZDnWY5PbMwj8hq4FnwaLhG6zx_Xz7YE"
+      LANG_SETTING: "ENG"
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./src:/docker_app/src
+      - ./srv:/docker_app/srv
+    depends_on:
+      - db__bot
+      - broker__bot
+
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4:7.2
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "deadcove@mail.ru"
+      PGADMIN_DEFAULT_PASSWORD: "1234"
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    restart: unless-stopped
+    networks:
+      - postgres
+
+
+volumes:
+  cache:
+    driver: local
+  data:
+  pgadmin-data:
+
+networks:
+  postgres:
+    driver: bridge
