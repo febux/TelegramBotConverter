@@ -87,7 +87,7 @@ services:
       - postgres
     environment:
       SQLALCHEMY_DATABASE_URI: "postgresql://postgres:postgres@db__bot:5432/tg_db"
-      TG_TOKEN: "1522218884:AAEqZDnWY5PbMwj8hq4FnwaLhG6zx_Xz7YE"
+      TG_TOKEN: "1522218884:AAFkYMr9hdgPR6a5UOw1spdBKPPdxaPGfgE"
       LANG_SETTING: "ENG"
     ports:
       - "8000:8000"
