@@ -1,9 +1,7 @@
-from flask_admin.contrib.sqla import ModelView, fields
-from flask_admin.contrib.sqla.ajax import QueryAjaxModelLoader
-from wtforms import SelectField
+from flask_admin.contrib.sqla import ModelView
 
 from src.bot__db import Translation, Phrase, Language
-from src.bot__db.db import db
+from src.configs.bot_db__config import db
 
 
 class TranslationView(ModelView):
@@ -11,7 +9,7 @@ class TranslationView(ModelView):
     Admin manager for Translation
     """
     column_display_pk = True
-    column_list = ['identifier', 'phrase', 'language', 'content', 'created_at', 'updated_at']
+    column_list = ['identifier', 'phrase', 'language', 'translation_content', 'created_at', 'updated_at']
     form_columns = column_list
     # form_overrides = {
     #     'phrase': SelectField,

@@ -3,10 +3,16 @@ version: '3.8'
 x-common-config: &common-config
   APPLICATION_ENV__LOCAL: 'local'
 
-x-app-config: &app-config
-  FLASK_APP: "app.py"
-  FLASK_RUN_HOST: "0.0.0.0"
-  FLASK_RUN_PORT: 8080
+x-admin-panel-config: &admin-panel-config
+  ADMIN_PANEL_APP: "app.py"
+  ADMIN_PANEL_RUN_HOST: "0.0.0.0"
+  ADMIN_PANEL_RUN_PORT: 8080
+
+x-internal-api-config: &internal-api-config
+  INTERNAL_API_ENDPOINT: "http://internal_api__db__bot:8090"
+  INTERNAL_API_APP: "app.py"
+  INTERNAL_API_RUN_HOST: "0.0.0.0"
+  INTERNAL_API_RUN_PORT: 8090
 
 x-db-config: &db-config
   POSTGRES_USER: postgres
@@ -41,13 +47,12 @@ services:
       context: "."
       dockerfile: "src/bot__db/Dockerfile"
     container_name: manager_db__bot
-    command: "python /docker_app/src/bot__db/main.py"
     networks:
       - postgres
     restart: 'no'
     environment:
       <<: *common-config
-      <<: *app-config
+      <<: *admin-panel-config
       <<: *db-config
       SQLALCHEMY_DATABASE_URI: "postgresql://postgres:postgres@db__bot:5432/tg_db"
     volumes:
@@ -60,16 +65,38 @@ services:
     restart: always
     build:
       context: "."
-      dockerfile: "src/bot__admin_web/Dockerfile"
-    command: "python /docker_app/src/bot__admin_web/app.py"
+      dockerfile: "src/bot__db/Dockerfile"
+    command: "python /docker_app/src/bot__db/app.py"
     networks:
       - postgres
     environment:
       <<: *common-config
-      <<: *app-config
+      <<: *admin-panel-config
       SQLALCHEMY_DATABASE_URI: "postgresql://postgres:postgres@db__bot:5432/tg_db"
     ports:
       - "8080:8080"
+    volumes:
+      - ./src:/docker_app/src
+      - ./srv:/docker_app/srv
+    depends_on:
+      - db__bot
+      - broker__bot
+
+  internal_api__db__bot:
+    restart: always
+    build:
+      context: "."
+      dockerfile: "src/internal_api/Dockerfile"
+    command: "python /docker_app/src/internal_api/app.py"
+    networks:
+      - postgres
+    environment:
+      <<: *common-config
+      <<: *admin-panel-config
+      <<: *internal-api-config
+      SQLALCHEMY_DATABASE_URI: "postgresql://postgres:postgres@db__bot:5432/tg_db"
+    ports:
+      - "8090:8090"
     volumes:
       - ./src:/docker_app/src
       - ./srv:/docker_app/srv
@@ -86,8 +113,11 @@ services:
     networks:
       - postgres
     environment:
+      <<: *common-config
+      <<: *admin-panel-config
+      <<: *internal-api-config
       SQLALCHEMY_DATABASE_URI: "postgresql://postgres:postgres@db__bot:5432/tg_db"
-      TG_TOKEN: "1522218884:AAEqZDnWY5PbMwj8hq4FnwaLhG6zx_Xz7YE"
+      TG_TOKEN: "1522218884:AAFkYMr9hdgPR6a5UOw1spdBKPPdxaPGfgE"
       LANG_SETTING: "ENG"
     ports:
       - "8000:8000"

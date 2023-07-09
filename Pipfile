@@ -15,6 +15,7 @@ flask-migrate = "*"
 pydantic = "*"
 sqlalchemy-serializer = "*"
 flask-script = "*"
+msgpack = "*"
 
 [dev-packages]
 

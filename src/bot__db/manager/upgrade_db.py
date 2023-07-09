@@ -32,10 +32,10 @@ def upgrade_db():
     help_phrase = Phrase(identifier=UUID('570ea584-dd4b-4828-8788-37a838e42a78'), phrase_key='help')
     welcome = Phrase(identifier=UUID('087af04d-3a90-44a8-9474-c8970298dec4'), phrase_key='welcome')
     start = Phrase(identifier=UUID('fa299177-2d9d-44ef-acb1-c303cfb403d0'), phrase_key='start')
-    keyboard_button1 = Phrase(identifier=UUID('371ecdee-fc05-417d-8697-b2f485509715'), phrase_key='keyboard_button1')
-    keyboard_button2 = Phrase(identifier=UUID('18c460ff-c773-4367-957a-30ddc02f606b'), phrase_key='keyboard_button2')
-    keyboard_button3 = Phrase(identifier=UUID('fa9714d9-5666-4871-bac2-4ee3bbd21e5c'), phrase_key='keyboard_button3')
-    keyboard_button4 = Phrase(identifier=UUID('0d08a694-f881-4fee-af47-a7fb5a632f46'), phrase_key='keyboard_button4')
+    keyboard_button_1 = Phrase(identifier=UUID('371ecdee-fc05-417d-8697-b2f485509715'), phrase_key='keyboard_button_1')
+    keyboard_button_2 = Phrase(identifier=UUID('18c460ff-c773-4367-957a-30ddc02f606b'), phrase_key='keyboard_button_2')
+    keyboard_button_3 = Phrase(identifier=UUID('fa9714d9-5666-4871-bac2-4ee3bbd21e5c'), phrase_key='keyboard_button_3')
+    keyboard_button_4 = Phrase(identifier=UUID('0d08a694-f881-4fee-af47-a7fb5a632f46'), phrase_key='keyboard_button_4')
     quote_currency_question = Phrase(identifier=UUID('a359a3f0-bf79-4798-8d6c-f18d2e53324a'), phrase_key='quote_currency_question')
     base_currency_question = Phrase(identifier=UUID('cd7a38db-b943-4940-a087-78162cf50c8c'), phrase_key='base_currency_question')
     related_1 = Phrase(identifier=UUID('f5ea39ca-34d3-459a-ad62-de29686e1611'), phrase_key='related_1')
@@ -49,10 +49,10 @@ def upgrade_db():
         help_phrase,
         welcome,
         start,
-        keyboard_button1,
-        keyboard_button2,
-        keyboard_button3,
-        keyboard_button4,
+        keyboard_button_1,
+        keyboard_button_2,
+        keyboard_button_3,
+        keyboard_button_4,
         quote_currency_question,
         base_currency_question,
         related_1,
@@ -72,7 +72,7 @@ def upgrade_db():
         Translation(
             phrase_id=help_phrase.identifier,
             language_id=eng.identifier,
-            content="To get the current exchange rate, click the \"Currency exchange rate\", "
+            translation_content="To get the current exchange rate, click the \"Currency exchange rate\", "
                     "then select the currency you want to know the rate against. \n\n "
                     "To go to the currency converter, click the \"Currency conversion\", "
                     "then select the currency you want to sell, "
@@ -86,7 +86,7 @@ def upgrade_db():
         Translation(
             phrase_id=help_phrase.identifier,
             language_id=rus.identifier,
-            content="Для получения актуального курса обмена нажмите кнопку \""
+            translation_content="Для получения актуального курса обмена нажмите кнопку \""
                     "Курс обмена валют\", затем выберите валюту, относительно "
                     "которой хотите узнать курс.\n\nДля перехода в конвертер валют "
                     "нажмите кнопку \"Конверсия валют\", затем выберите выберите валюту, "
@@ -97,6 +97,90 @@ def upgrade_db():
                     "Для получения списка доступных валют нажмите кнопку "
                     "\"Список доступных валют\".\n\nДля получения помощи по "
                     "работе со мной нажмите кнопку \"Помощь\".\n\n",
+        ),
+        Translation(
+            phrase_id=welcome.identifier,
+            language_id=rus.identifier,
+            translation_content="Добро пожаловать",
+        ),
+        Translation(
+            phrase_id=welcome.identifier,
+            language_id=eng.identifier,
+            translation_content="Welcome",
+        ),
+        Translation(
+            phrase_id=start.identifier,
+            language_id=rus.identifier,
+            translation_content="Я - Валютный бот.\n\n"
+                    "Для получения списка доступных валют нажмите кнопку \"Список доступных валют\".\n"
+                    "Для получения помощи по работе со мной нажмите кнопку \"Помощь\".\n",
+        ),
+        Translation(
+            phrase_id=start.identifier,
+            language_id=eng.identifier,
+            translation_content="I am a currency bot.\n\n"
+                    "For a list of available currencies, click the \"List of available currencies\" button. \n"
+                    "For help with working with me, click the button \"Help\".\n",
+        ),
+        Translation(
+            phrase_id=keyboard_button_1.identifier,
+            language_id=rus.identifier,
+            translation_content='Курс обмена валют',
+        ),
+        Translation(
+            phrase_id=keyboard_button_1.identifier,
+            language_id=eng.identifier,
+            translation_content='Currency exchange rate',
+        ),
+        Translation(
+            phrase_id=keyboard_button_2.identifier,
+            language_id=rus.identifier,
+            translation_content='Конверсия валют',
+        ),
+        Translation(
+            phrase_id=keyboard_button_2.identifier,
+            language_id=eng.identifier,
+            translation_content='Currency conversion',
+        ),
+        Translation(
+            phrase_id=keyboard_button_3.identifier,
+            language_id=rus.identifier,
+            translation_content='Список доступных валют',
+        ),
+        Translation(
+            phrase_id=keyboard_button_3.identifier,
+            language_id=eng.identifier,
+            translation_content='List of available currencies',
+        ),
+        Translation(
+            phrase_id=keyboard_button_4.identifier,
+            language_id=rus.identifier,
+            translation_content='Помощь',
+        ),
+        Translation(
+            phrase_id=keyboard_button_4.identifier,
+            language_id=eng.identifier,
+            translation_content='Help',
+        ),
+        Translation(
+            phrase_id=wrong_text.identifier,
+            language_id=rus.identifier,
+            translation_content="Ты это! Ты того… Не безобразничай.",
+        ),
+        Translation(
+            phrase_id=wrong_text.identifier,
+            language_id=eng.identifier,
+            translation_content="Hey you! You ... do not misbehave.",
+        ),
+        Translation(
+            phrase_id=available_currency.identifier,
+            language_id=rus.identifier,
+            translation_content='Доступные валюты',
+        ),
+        Translation(
+            phrase_id=available_currency.identifier,
+            language_id=eng.identifier,
+            translation_content="Available currencies",
         ),
     ]
 

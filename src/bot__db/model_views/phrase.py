@@ -1,7 +1,7 @@
 from flask_admin.contrib.sqla import ModelView
 
 from src.bot__db import Phrase
-from src.bot__db.db import db
+from src.configs.bot_db__config import db
 
 
 class PhraseView(ModelView):

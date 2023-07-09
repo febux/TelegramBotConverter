@@ -2,9 +2,10 @@ aiogram>=2.13
 requests>=2.25.1
 lxml>=4.9.2
 
-flask>=2.3.2
-flask-admin>=1.6.1
-flask-sqlalchemy>=3.0.5
-Flask-Migrate>=4.0.4
-SQLAlchemy-serializer>=1.4.1
-pydantic>=1.10.9
+flask==2.3.2
+flask-admin==1.6.1
+flask-sqlalchemy==3.0.5
+Flask-Migrate==4.0.4
+SQLAlchemy-serializer==1.4.1
+pydantic==1.10.9
+msgpack==1.0.5

@@ -4,3 +4,4 @@ flask-sqlalchemy==3.0.5
 Flask-Migrate==4.0.4
 SQLAlchemy-serializer==1.4.1
 pydantic==1.10.9
+msgpack==1.0.5

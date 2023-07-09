@@ -4,7 +4,7 @@ import uuid
 from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.dialects.postgresql import UUID
 
-from src.bot__db.db import db
+from src.configs.bot_db__config import db
 
 
 class BaseModel(db.Model, SerializerMixin):

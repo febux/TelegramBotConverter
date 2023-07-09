@@ -1,5 +1,7 @@
+import logging
 import os
-from typing import Optional, List, Type
+from functools import wraps
+from typing import Optional, List, Type, Any, Callable, TypeVar, cast
 
 from flask import Flask
 from flask_admin import Admin
@@ -7,6 +9,7 @@ from flask_admin.contrib.sqla import ModelView
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 
+from src.utils.api_utils.load_modules import load_modules_by_template
 from src.utils.db_utils.models_config import DbConfig, AdminConfig
 
 
@@ -24,9 +27,18 @@ APPLICATION_UNDER_DOCKER = '/docker_app/' in os.getcwd()
 APPLICATION_DEBUG = os.environ.get('APPLICATION_DEBUG', '0') == '1'
 
 
+TFn = TypeVar("TFn", bound=Callable[..., Any])
+
+
 class FlaskApp:
     def __init__(self, name: str, db_config: DbConfig = None, admin_panel: AdminConfig = None):
-        self._app = Flask(name)
+        self._app = Flask(
+            import_name=name,
+            static_url_path=None,
+            static_folder=os.path.join(APPLICATION_DIR, 'static'),
+            template_folder=os.path.join(APPLICATION_DIR, 'templates'),
+        )
+        self._fn_registry: List[Any] = []
         self._app.config['DEBUG'] = APPLICATION_ENV_IS_LOCAL and APPLICATION_DEBUG
         self._app.config['EXPLAIN_TEMPLATE_LOADING'] = False
         self._app.config['ENV'] = 'development' if APPLICATION_DEBUG else 'production'
@@ -52,6 +64,22 @@ class FlaskApp:
         if admin_panel:
             self._app.config['FLASK_ADMIN_SWATCH'] = admin_panel.admin_swatch
             self._admin = Admin(self._app, name=admin_panel.panel_name, template_mode='bootstrap3')
+
+    @staticmethod
+    def load_routes():
+        route_files, ignored_route_files, mdl_list = load_modules_by_template([
+            os.path.join(APPLICATION_DIR, 'routes', 'api_*.py'),
+            os.path.join(APPLICATION_DIR, 'routes', '**', 'api_*.py'),
+            os.path.join(APPLICATION_DIR, 'views', 'view_*.py'),
+            os.path.join(APPLICATION_DIR, 'views', '**', 'view_*.py'),
+        ])
+
+        return route_files, ignored_route_files, mdl_list
+
+    def register_test_route(self):
+        @self.route(['GET'], '/test')
+        def test_page():
+            return '<h1>Testing the Flask Application Factory Pattern</h1>'
 
     def connect_db_to_app(self, db: Optional[SQLAlchemy] = None, migrate: Optional[Migrate] = None):
         self.db = db if db else self.db
@@ -86,3 +114,45 @@ class FlaskApp:
     @property
     def admin(self):
         return self._admin
+
+    @property
+    def fn_registry(self):
+        return self._fn_registry
+
+    def route(
+            self,
+            methods: List[str],
+            path: str,
+    ) -> Callable[[TFn], TFn]:
+        def wrap(fn: TFn) -> TFn:
+            assert self.app is not None, 'app must be initialized'
+            assert fn.__module__, 'empty __module__ of function'
+
+            logging.getLogger(fn.__module__)
+
+            @wraps(fn)
+            def wrapper(**kwargs: Any) -> Any:
+                result = None
+                self._fn_registry.append(fn)
+                if result is None:
+                    try:
+                        result = self.app.ensure_sync(fn)(**kwargs)
+                    except Exception as e:  # noqa: B902
+                        result = e
+                return result
+
+            wrapper = self.app.route(path, methods=methods)(wrapper)
+
+            return cast(TFn, wrapper)
+
+        return wrap
+
+    def run(
+            self,
+            host: Optional[str] = None,
+            port: Optional[int] = None,
+            debug: Optional[bool] = None,
+            load_dotenv: bool = True,
+            **options: Any,
+    ) -> None:
+        self.app.run(host=host, port=port, debug=debug, load_dotenv=load_dotenv, **options)

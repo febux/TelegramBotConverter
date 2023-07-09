@@ -16,3 +16,7 @@ RUN export PATH=/usr/lib/postgresql/14.8/bin/:$PATH
 RUN pip install psycopg2
 
 RUN python setup.py install
+
+EXPOSE ${ADMIN_PANEL_RUN_PORT}
+
+#CMD ["flask", "run"]

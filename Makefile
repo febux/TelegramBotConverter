@@ -16,7 +16,8 @@ up:
 		db__bot \
 		broker__bot \
 		app__bot \
-		admin_web__bot
+		admin_web__bot \
+		internal_api__db__bot
 
 
 db__init:

@@ -1,4 +1,4 @@
-from src.bot__db.db import db
+from src.configs.bot_db__config import db
 from src.bot__db.models.base_model import BaseModel
 
 
