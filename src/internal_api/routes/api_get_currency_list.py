@@ -1,16 +1,15 @@
 import logging
 
 from flask import json
-from markupsafe import escape
 
-from src.bot__db.models.helpers import TranslationRepository
+from src.bot__db.models.helpers import CurrencyRepository
 from src.internal_api.app import internal_api_flask_app
 
 
-@internal_api_flask_app.route(["GET"], '/translations/<string:lang>/<string:phrase>')
-def get_translation_by_lang(lang: str, phrase: str):
+@internal_api_flask_app.route(["GET"], '/currencies')
+def get_currency_list():
     try:
-        result = TranslationRepository.get_by_lang_phrase(escape(lang), escape(phrase))
+        result = CurrencyRepository.get_all()
     except TypeError as e:
         logging.exception(e)
         result = {}

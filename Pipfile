@@ -16,6 +16,7 @@ pydantic = "*"
 sqlalchemy-serializer = "*"
 flask-script = "*"
 msgpack = "*"
+redis = "*"
 
 [dev-packages]
 

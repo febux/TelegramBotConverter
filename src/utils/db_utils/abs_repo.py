@@ -1,22 +1,32 @@
 import abc
+from typing import List
 from uuid import UUID
 
 from src.bot__db.models.base_model import BaseModel
 
 
 class AbstractRepository(abc.ABC):
+    @classmethod
     @abc.abstractmethod
-    def add(self):
+    def add(cls):
         raise NotImplementedError
 
+    @classmethod
     @abc.abstractmethod
-    def get(self, identifier: UUID) -> BaseModel:
+    def get(cls, identifier: UUID) -> BaseModel:
         raise NotImplementedError
 
+    @classmethod
     @abc.abstractmethod
-    def update(self, identifier: UUID) -> BaseModel:
+    def get_all(cls) -> List[BaseModel]:
         raise NotImplementedError
 
+    @classmethod
     @abc.abstractmethod
-    def delete(self, identifier: UUID) -> None:
+    def update(cls, identifier: UUID) -> BaseModel:
+        raise NotImplementedError
+
+    @classmethod
+    @abc.abstractmethod
+    def delete(cls, identifier: UUID) -> None:
         raise NotImplementedError

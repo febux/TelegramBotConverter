@@ -3,6 +3,11 @@ version: '3.8'
 x-common-config: &common-config
   APPLICATION_ENV__LOCAL: 'local'
 
+x-redis-config: &redis-config
+  REDIS_HOST: 'broker__bot'
+  REDIS_PORT: 6379
+  REDIS_PASSWORD: 'eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81'
+
 x-admin-panel-config: &admin-panel-config
   ADMIN_PANEL_APP: "app.py"
   ADMIN_PANEL_RUN_HOST: "0.0.0.0"
@@ -24,6 +29,8 @@ services:
   broker__bot:
     image: redis:6.2-alpine
     restart: always
+    networks:
+      - redis
     ports:
       - "6379:6379"
     command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
@@ -112,13 +119,15 @@ services:
     command: "python /docker_app/src/bot__app/main.py"
     networks:
       - postgres
+      - redis
     environment:
       <<: *common-config
+      <<: *redis-config
       <<: *admin-panel-config
       <<: *internal-api-config
       SQLALCHEMY_DATABASE_URI: "postgresql://postgres:postgres@db__bot:5432/tg_db"
       TG_TOKEN: "1522218884:AAFkYMr9hdgPR6a5UOw1spdBKPPdxaPGfgE"
-      LANG_SETTING: "ENG"
+      LANG_SETTING: "RUS"
     ports:
       - "8000:8000"
     volumes:
@@ -126,6 +135,7 @@ services:
       - ./srv:/docker_app/srv
     depends_on:
       - db__bot
+      - admin_web__bot
       - broker__bot
 
   pgadmin:
@@ -152,4 +162,6 @@ volumes:
 
 networks:
   postgres:
+    driver: bridge
+  redis:
     driver: bridge

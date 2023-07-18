@@ -41,6 +41,7 @@ def upgrade_db():
     related_1 = Phrase(identifier=UUID('f5ea39ca-34d3-459a-ad62-de29686e1611'), phrase_key='related_1')
     your_choice = Phrase(identifier=UUID('8d747a0f-18d4-4db1-88af-21f0b275a94d'), phrase_key='your_choice')
     currency_amount = Phrase(identifier=UUID('5209ab44-20c7-43e6-8b0f-52a663cb97fc'), phrase_key='currency_amount')
+    currency_amount_question = Phrase(identifier=UUID('aba30fbb-1416-4b88-8c73-c87f79ad5f6b'), phrase_key='currency_amount_question')
     currency_name_question = Phrase(identifier=UUID('f0c4b382-42fb-45d1-b4a5-b7843009a9be'), phrase_key='currency_name_question')
     wrong_text = Phrase(identifier=UUID('dfa711b4-655e-4e57-9253-9a5bc29151b3'), phrase_key='wrong_text')
     available_currency = Phrase(identifier=UUID('493f5b0c-14ec-467f-a2e0-71df27b6dff0'), phrase_key='available_currency')
@@ -58,6 +59,7 @@ def upgrade_db():
         related_1,
         your_choice,
         currency_amount,
+        currency_amount_question,
         currency_name_question,
         wrong_text,
         available_currency,
@@ -125,12 +127,12 @@ def upgrade_db():
         Translation(
             phrase_id=keyboard_button_1.identifier,
             language_id=rus.identifier,
-            translation_content='Курс обмена валют',
+            translation_content="Курс обмена валют",
         ),
         Translation(
             phrase_id=keyboard_button_1.identifier,
             language_id=eng.identifier,
-            translation_content='Currency exchange rate',
+            translation_content="Currency exchange rate",
         ),
         Translation(
             phrase_id=keyboard_button_2.identifier,
@@ -140,27 +142,27 @@ def upgrade_db():
         Translation(
             phrase_id=keyboard_button_2.identifier,
             language_id=eng.identifier,
-            translation_content='Currency conversion',
+            translation_content="Currency conversion",
         ),
         Translation(
             phrase_id=keyboard_button_3.identifier,
             language_id=rus.identifier,
-            translation_content='Список доступных валют',
+            translation_content="Список доступных валют",
         ),
         Translation(
             phrase_id=keyboard_button_3.identifier,
             language_id=eng.identifier,
-            translation_content='List of available currencies',
+            translation_content="List of available currencies",
         ),
         Translation(
             phrase_id=keyboard_button_4.identifier,
             language_id=rus.identifier,
-            translation_content='Помощь',
+            translation_content="Помощь",
         ),
         Translation(
             phrase_id=keyboard_button_4.identifier,
             language_id=eng.identifier,
-            translation_content='Help',
+            translation_content="Help",
         ),
         Translation(
             phrase_id=wrong_text.identifier,
@@ -175,12 +177,82 @@ def upgrade_db():
         Translation(
             phrase_id=available_currency.identifier,
             language_id=rus.identifier,
-            translation_content='Доступные валюты',
+            translation_content="Доступные валюты",
         ),
         Translation(
             phrase_id=available_currency.identifier,
             language_id=eng.identifier,
             translation_content="Available currencies",
+        ),
+        Translation(
+            phrase_id=base_currency_question.identifier,
+            language_id=rus.identifier,
+            translation_content="Относительно какой валюты хотите узнать курс?",
+        ),
+        Translation(
+            phrase_id=base_currency_question.identifier,
+            language_id=eng.identifier,
+            translation_content="What currency do you want to know the rate?",
+        ),
+        Translation(
+            phrase_id=quote_currency_question.identifier,
+            language_id=rus.identifier,
+            translation_content="Какую валюту вы хотите обменять?",
+        ),
+        Translation(
+            phrase_id=quote_currency_question.identifier,
+            language_id=eng.identifier,
+            translation_content="What currency do you want to exchange?",
+        ),
+        Translation(
+            phrase_id=related_1.identifier,
+            language_id=rus.identifier,
+            translation_content="Курс валют относительно 1",
+        ),
+        Translation(
+            phrase_id=related_1.identifier,
+            language_id=eng.identifier,
+            translation_content="Currency rate relative to 1",
+        ),
+        Translation(
+            phrase_id=your_choice.identifier,
+            language_id=rus.identifier,
+            translation_content="Ваш выбор",
+        ),
+        Translation(
+            phrase_id=your_choice.identifier,
+            language_id=eng.identifier,
+            translation_content="Your choice",
+        ),
+        Translation(
+            phrase_id=currency_amount.identifier,
+            language_id=rus.identifier,
+            translation_content="Ваша сумма",
+        ),
+        Translation(
+            phrase_id=currency_amount.identifier,
+            language_id=eng.identifier,
+            translation_content="Your amount",
+        ),
+        Translation(
+            phrase_id=currency_amount_question.identifier,
+            language_id=rus.identifier,
+            translation_content="Какая сумма валюты, которую хотите обменять?",
+        ),
+        Translation(
+            phrase_id=currency_amount_question.identifier,
+            language_id=eng.identifier,
+            translation_content="How much currency do you want to exchange?",
+        ),
+        Translation(
+            phrase_id=currency_name_question.identifier,
+            language_id=rus.identifier,
+            translation_content="Какую валюту вы хотите купить?",
+        ),
+        Translation(
+            phrase_id=currency_name_question.identifier,
+            language_id=eng.identifier,
+            translation_content="What currency do you want to buy?",
         ),
     ]
 

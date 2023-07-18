@@ -117,7 +117,10 @@ class InternalApi:
                 q=q,
                 headers=headers,
             ).json()
-            return payload_type(**response)
+            if isinstance(response, list):
+                return [payload_type(**res) for res in response]     # noqa
+            elif isinstance(response, dict):
+                return payload_type(**response)     # noqa
         return self.request(
             ApiMethod.GET,
             path,
