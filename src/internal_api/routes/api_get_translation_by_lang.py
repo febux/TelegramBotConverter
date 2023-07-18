@@ -11,9 +11,6 @@ from src.internal_api.app import internal_api_flask_app
 def get_translation_by_lang(lang: str, phrase: str):
     try:
         result = TranslationRepository.get_by_lang_phrase(escape(lang), escape(phrase))
-    except TypeError as e:
-        logging.exception(e)
-        result = {}
     except Exception as e:
         logging.exception(e)
         result = {}
