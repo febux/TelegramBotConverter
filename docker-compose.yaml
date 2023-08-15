@@ -126,7 +126,7 @@ services:
       <<: *admin-panel-config
       <<: *internal-api-config
       SQLALCHEMY_DATABASE_URI: "postgresql://postgres:postgres@db__bot:5432/tg_db"
-      TG_TOKEN: "1522218884:AAFkYMr9hdgPR6a5UOw1spdBKPPdxaPGfgE"
+      TG_TOKEN: ""
       LANG_SETTING: "RUS"
     ports:
       - "8000:8000"
